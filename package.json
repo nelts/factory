@@ -1,0 +1,32 @@
+{
+  "name": "@nelts/factory",
+  "version": "1.0.0",
+  "description": "messager for nelts",
+  "main": "dist/index.js",
+  "source": "dist",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nelts/factory.git"
+  },
+  "scripts": {
+    "build": "rm -rf dist/ && tsc -d"
+  },
+  "keywords": [
+    "template",
+    "nelts"
+  ],
+  "author": "cevio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nelts/factory/issues"
+  },
+  "homepage": "https://github.com/nelts/factory#readme",
+  "devDependencies": {
+    "@types/node": "^12.6.8",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@nelts/process": "^1.1.10",
+    "@nelts/utils": "^1.0.2"
+  }
+}
