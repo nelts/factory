@@ -10,7 +10,7 @@ class Factory extends process_1.Component {
         this._configs = {};
         this._plugins = {};
         this.compiler = new compiler_1.default();
-        this._base = args.base ? path.resolve(args.base || '.') : args.cwd;
+        this._base = args.base ? path.resolve(args.base || '.') : (args.cwd || process.cwd());
         this._env = args.env;
         this._inCommingMessage = args;
         this._structor = PluginConstructor;

@@ -27,7 +27,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
 
   constructor(processer: Processer, args: InCommingMessage, PluginConstructor: { new(t: Factory<P>, n: string, m: string): P }) {
     super(processer, args);
-    this._base = args.base ? path.resolve(args.base || '.') : args.cwd;
+    this._base = args.base ? path.resolve(args.base || '.') : (args.cwd || process.cwd());
     this._env = args.env;
     this._inCommingMessage = args;
     this._structor = PluginConstructor;
