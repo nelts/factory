@@ -39,7 +39,7 @@ class Plugin extends utils_1.EventEmitter {
         const packageFilePath = path.resolve(cwd, 'package.json');
         if (!fs.existsSync(packageFilePath))
             return cwd;
-        const packageExports = utils_2.RequireDefault(packageFilePath);
+        const packageExports = utils_2.Require(packageFilePath);
         if (!packageExports.source)
             return cwd;
         return path.resolve(cwd, packageExports.source);

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { EventEmitter } from '@nelts/utils';
 import Factory from './factory';
-import { RequireDefault, NELTS_PACKAGE_JSON_INTERFACE } from '@nelts/utils';
+import { Require, NELTS_PACKAGE_JSON_INTERFACE } from '@nelts/utils';
 import { Compiler } from './compiler';
 export default class Plugin<F extends Factory<Plugin<F>>> extends EventEmitter {
   private _name: string;
@@ -52,7 +52,7 @@ export default class Plugin<F extends Factory<Plugin<F>>> extends EventEmitter {
   private _findSource(cwd: string) {
     const packageFilePath = path.resolve(cwd, 'package.json');
     if (!fs.existsSync(packageFilePath)) return cwd;
-    const packageExports = RequireDefault<NELTS_PACKAGE_JSON_INTERFACE>(packageFilePath);
+    const packageExports = Require<NELTS_PACKAGE_JSON_INTERFACE>(packageFilePath);
     if (!packageExports.source) return cwd;
     return path.resolve(cwd, packageExports.source);
   }
