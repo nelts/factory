@@ -1,6 +1,6 @@
 {
   "name": "@nelts/factory",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "messager for nelts",
   "main": "dist/index.js",
   "source": "dist",
@@ -22,11 +22,11 @@
   },
   "homepage": "https://github.com/nelts/factory#readme",
   "devDependencies": {
-    "@types/node": "^12.6.8",
+    "@types/node": "^12.6.9",
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "@nelts/process": "^1.1.10",
-    "@nelts/utils": "^1.0.2"
+    "@nelts/process": "^1.1.11",
+    "@nelts/utils": "^1.0.7"
   }
 }
