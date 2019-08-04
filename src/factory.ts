@@ -31,7 +31,6 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     this._env = args.env;
     this._inCommingMessage = args;
     this._structor = PluginConstructor;
-    if (args.config) this._configs = RequireDefault(args.config, this._base);
   }
 
   get inCommingMessage() {
@@ -65,6 +64,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
 
   async componentDidCreated() {
     await this.compiler.run();
+    if (this._inCommingMessage.config) this._configs = RequireDefault(this._inCommingMessage.config, this._base);
     if (this.configs) await this._root.props(this.configs);
   }
 
