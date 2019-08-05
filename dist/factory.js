@@ -14,6 +14,8 @@ class Factory extends process_1.Component {
         this._env = args.env;
         this._inCommingMessage = args;
         this._structor = PluginConstructor;
+        if (this._inCommingMessage.config)
+            this._configs = utils_1.RequireDefault(this._inCommingMessage.config, this._base);
     }
     get inCommingMessage() {
         return this._inCommingMessage;
@@ -39,8 +41,6 @@ class Factory extends process_1.Component {
     }
     async componentDidCreated() {
         await this.compiler.run();
-        if (this._inCommingMessage.config)
-            this._configs = utils_1.RequireDefault(this._inCommingMessage.config, this._base);
         if (this.configs)
             await this._root.props(this.configs);
     }
