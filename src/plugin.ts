@@ -21,6 +21,10 @@ export default class Plugin<F extends Factory<Plugin<F>>> extends EventEmitter {
     this._source = this._findSource(cwd);
   }
 
+  get injector() {
+    return this.app.injector;
+  }
+
   get logger() {
     return this.app.logger;
   }

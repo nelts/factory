@@ -10,6 +10,7 @@ export default class Plugin<F extends Factory<Plugin<F>>> extends EventEmitter {
     private _configs;
     private _components;
     constructor(app: F, name: string, cwd: string);
+    readonly injector: import("injection").Container;
     readonly logger: import("log4js").Logger;
     readonly configs: any;
     readonly app: F;

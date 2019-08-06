@@ -4,11 +4,14 @@ const path = require("path");
 const process_1 = require("@nelts/process");
 const compiler_1 = require("./compiler");
 const utils_1 = require("@nelts/utils");
+const injection_1 = require("injection");
+const service_1 = require("./service");
 class Factory extends process_1.Component {
     constructor(processer, args, PluginConstructor) {
         super(processer, args);
         this._configs = {};
         this._plugins = {};
+        this._injector = new injection_1.Container();
         this.compiler = new compiler_1.default();
         this._base = args.base ? path.resolve(args.base || '.') : (args.cwd || process.cwd());
         this._env = args.env;
@@ -16,6 +19,9 @@ class Factory extends process_1.Component {
         this._structor = PluginConstructor;
         if (this._inCommingMessage.config)
             this._configs = utils_1.RequireDefault(this._inCommingMessage.config, this._base);
+    }
+    get injector() {
+        return this._injector;
     }
     get inCommingMessage() {
         return this._inCommingMessage;
@@ -38,6 +44,7 @@ class Factory extends process_1.Component {
     async componentWillCreate() {
         this.dispatch = this.render();
         this._root = await this.dispatch(this.base);
+        this.compiler.addCompiler(service_1.default);
     }
     async componentDidCreated() {
         await this.compiler.run();

@@ -3,6 +3,8 @@ import { Component, Processer, ProcessArgvType, WidgetComponent } from '@nelts/p
 import Compiler from './compiler';
 import { RequireDefault, findNodeModules, Collect } from '@nelts/utils';
 import Plugin from './plugin';
+import { Container } from 'injection';
+import ServiceCompiler from './service';
 
 export interface InCommingMessage extends ProcessArgvType {
   base: string,
@@ -22,6 +24,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   private _plugins: { [name: string]: P } = {};
   private _structor: { new(t: Factory<P>, n: string, m: string): P };
   private _root: P;
+  private _injector: Container = new Container();
   public dispatch: (component_path: string, root?: P) => Promise<P>;
   public readonly compiler = new Compiler<P>();
 
@@ -32,6 +35,10 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     this._inCommingMessage = args;
     this._structor = PluginConstructor;
     if (this._inCommingMessage.config) this._configs = RequireDefault(this._inCommingMessage.config, this._base);
+  }
+
+  get injector() {
+    return this._injector;
   }
 
   get inCommingMessage() {
@@ -61,6 +68,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   async componentWillCreate() {
     this.dispatch = this.render();
     this._root = await this.dispatch(this.base);
+    this.compiler.addCompiler(ServiceCompiler);
   }
 
   async componentDidCreated() {
