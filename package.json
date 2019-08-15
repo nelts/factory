@@ -22,12 +22,12 @@
   },
   "homepage": "https://github.com/nelts/factory#readme",
   "devDependencies": {
-    "@types/node": "^12.6.9",
+    "@types/node": "^12.7.2",
     "typescript": "^3.5.3"
   },
   "dependencies": {
     "@nelts/process": "^1.1.20",
-    "@nelts/utils": "^1.0.18",
+    "@nelts/utils": "^1.0.19",
     "globby": "^10.0.1",
     "injection": "^1.6.1"
   }
