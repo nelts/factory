@@ -54,13 +54,21 @@ class Factory extends process_1.Component {
     componentCatchError(err) {
         this.logger.error(err);
     }
+    getEnvName() {
+        switch (this.kind) {
+            case process_1.CHILD_PROCESS_TYPE.AGENT: return 'agent';
+            case process_1.CHILD_PROCESS_TYPE.MASTER: return 'master';
+            case process_1.CHILD_PROCESS_TYPE.WORKER: return 'worker';
+            default: return 'unknow';
+        }
+    }
     render() {
         const node_module_paths = utils_1.findNodeModules({ cwd: this.base, relative: false });
         if (!node_module_paths.length)
             throw new Error('cannot find node_modules path');
         const node_module_path = node_module_paths[0];
         const dispatch = async (component_path, root) => {
-            const { name, dependenties } = utils_1.Collect(component_path, node_module_path, { env: this.env, name: 'master' });
+            const { name, dependenties } = utils_1.Collect(component_path, node_module_path, { env: this.env, name: this.getEnvName() });
             if (!this.plugins[name])
                 this.plugins[name] = new this._structor(this, name, component_path);
             if (!root)

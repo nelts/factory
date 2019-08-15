@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Component, Processer, ProcessArgvType, WidgetComponent } from '@nelts/process';
+import { Component, Processer, ProcessArgvType, WidgetComponent, CHILD_PROCESS_TYPE } from '@nelts/process';
 import Compiler from './compiler';
 import { RequireDefault, findNodeModules, Collect } from '@nelts/utils';
 import Plugin from './plugin';
@@ -80,12 +80,21 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     this.logger.error(err);
   }
 
+  private getEnvName() {
+    switch (this.kind) {
+      case CHILD_PROCESS_TYPE.AGENT: return 'agent';
+      case CHILD_PROCESS_TYPE.MASTER: return 'master';
+      case CHILD_PROCESS_TYPE.WORKER: return 'worker';
+      default: return 'unknow';
+    }
+  }
+
   render() {
     const node_module_paths = findNodeModules({ cwd: this.base, relative: false });
     if (!node_module_paths.length) throw new Error('cannot find node_modules path');
     const node_module_path = node_module_paths[0];
     const dispatch = async (component_path: string, root?: P) => {
-      const { name, dependenties } = Collect(component_path, node_module_path, { env: this.env, name: 'master' });
+      const { name, dependenties } = Collect(component_path, node_module_path, { env: this.env, name: this.getEnvName() });
       if (!this.plugins[name]) this.plugins[name] = new this._structor(this, name, component_path);
       if (!root) root = this.plugins[name];
       const childrens = await Promise.all(dependenties.map(dep => dispatch(dep, root)));

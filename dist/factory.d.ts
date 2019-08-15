@@ -37,5 +37,6 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     componentWillCreate(): Promise<void>;
     componentDidCreated(): Promise<void>;
     componentCatchError(err: Error): void;
+    private getEnvName;
     render(): (component_path: string, root?: P) => Promise<P>;
 }
