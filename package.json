@@ -26,8 +26,8 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "@nelts/process": "^1.1.20",
-    "@nelts/utils": "^1.0.19",
+    "@nelts/process": "^1.1.21",
+    "@nelts/utils": "^1.0.20",
     "globby": "^10.0.1",
     "injection": "^1.6.1"
   }
