@@ -65,6 +65,10 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     return this._configs;
   }
 
+  set configs(value: any) {
+    this._configs = value;
+  }
+
   async componentWillCreate() {
     this.dispatch = this.render();
     this._root = await this.dispatch(this.base);
@@ -73,7 +77,13 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
 
   async componentDidCreated() {
     await this.compiler.run();
-    if (this.configs) await this._root.props(this.configs);
+    if (this.configs) {
+      if (typeof this.configs === 'function') {
+        this.configs = await this.configs();
+      }
+      this.configs = Object.freeze(this.configs);
+      await this._root.props(this.configs);
+    }
   }
 
   componentCatchError(err: Error) {

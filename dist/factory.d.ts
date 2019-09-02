@@ -33,7 +33,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     readonly plugins: {
         [name: string]: P;
     };
-    readonly configs: any;
+    configs: any;
     componentWillCreate(): Promise<void>;
     componentDidCreated(): Promise<void>;
     componentCatchError(err: Error): void;
