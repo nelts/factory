@@ -53,7 +53,7 @@ class Factory extends process_1.Component {
         await this.compiler.run();
         if (this.configs) {
             if (typeof this.configs === 'function') {
-                this.configs = await this.configs();
+                this.configs = await this.configs(this);
             }
             this.configs = Object.freeze(this.configs);
             await this._root.props(this.configs);
