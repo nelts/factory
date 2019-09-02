@@ -1,6 +1,6 @@
 {
   "name": "@nelts/factory",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "messager for nelts",
   "main": "dist/index.js",
   "source": "dist",
