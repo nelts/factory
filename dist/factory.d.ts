@@ -20,11 +20,14 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     private _structor;
     private _root;
     private _injector;
+    private _gettingConfigs;
     dispatch: (component_path: string, root?: P) => Promise<P>;
     readonly compiler: Compiler<P>;
     constructor(processer: Processer, args: InCommingMessage, PluginConstructor: {
         new (t: Factory<P>, n: string, m: string): P;
     });
+    private getConfigsDynamic;
+    private waitGetConfigs;
     readonly injector: Container;
     readonly inCommingMessage: InCommingMessage;
     readonly logger: import("log4js").Logger;

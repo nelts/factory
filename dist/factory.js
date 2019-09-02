@@ -12,6 +12,7 @@ class Factory extends process_1.Component {
         this._configs = {};
         this._plugins = {};
         this._injector = new injection_1.Container();
+        this._gettingConfigs = false;
         this.compiler = new compiler_1.default();
         this._base = args.base ? path.resolve(args.base || '.') : (args.cwd || process.cwd());
         this._env = args.env;
@@ -19,6 +20,33 @@ class Factory extends process_1.Component {
         this._structor = PluginConstructor;
         if (this._inCommingMessage.config)
             this._configs = utils_1.RequireDefault(this._inCommingMessage.config, this._base);
+        this.getConfigsDynamic();
+    }
+    getConfigsDynamic() {
+        if (typeof this.configs === 'function') {
+            this._gettingConfigs = true;
+            Promise.resolve(this.configs(this))
+                .then(data => this.configs = data)
+                .catch(e => this.logger.fatal(e))
+                .finally(() => this._gettingConfigs = false);
+        }
+    }
+    waitGetConfigs() {
+        return new Promise((resolve, reject) => {
+            if (!this._gettingConfigs)
+                return resolve();
+            const time = Date.now();
+            const timer = setInterval(() => {
+                if (Date.now() - time > 90000) {
+                    clearInterval(timer);
+                    return reject(new Error('get configs timeout: 90000'));
+                }
+                if (this._gettingConfigs)
+                    return;
+                clearInterval(timer);
+                resolve();
+            }, 10);
+        });
     }
     get injector() {
         return this._injector;
@@ -45,6 +73,7 @@ class Factory extends process_1.Component {
         this._configs = value;
     }
     async componentWillCreate() {
+        await this.waitGetConfigs();
         this.dispatch = this.render();
         this._root = await this.dispatch(this.base);
         this.compiler.addCompiler(service_1.default);
@@ -52,9 +81,6 @@ class Factory extends process_1.Component {
     async componentDidCreated() {
         await this.compiler.run();
         if (this.configs) {
-            if (typeof this.configs === 'function') {
-                this.configs = await this.configs(this);
-            }
             this.configs = Object.freeze(this.configs);
             await this._root.props(this.configs);
         }

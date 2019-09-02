@@ -25,6 +25,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   private _structor: { new(t: Factory<P>, n: string, m: string): P };
   private _root: P;
   private _injector: Container = new Container();
+  private _gettingConfigs: boolean = false;
   public dispatch: (component_path: string, root?: P) => Promise<P>;
   public readonly compiler = new Compiler<P>();
 
@@ -35,6 +36,33 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
     this._inCommingMessage = args;
     this._structor = PluginConstructor;
     if (this._inCommingMessage.config) this._configs = RequireDefault(this._inCommingMessage.config, this._base);
+    this.getConfigsDynamic();
+  }
+
+  private getConfigsDynamic() {
+    if (typeof this.configs === 'function') {
+      this._gettingConfigs = true;
+      Promise.resolve(this.configs(this))
+        .then(data => this.configs = data)
+        .catch(e => this.logger.fatal(e))
+        .finally(() => this._gettingConfigs = false);
+    }
+  }
+
+  private waitGetConfigs() {
+    return new Promise((resolve, reject) => {
+      if (!this._gettingConfigs) return resolve();
+      const time = Date.now();
+      const timer = setInterval(() => {
+        if (Date.now() - time > 90000) {
+          clearInterval(timer);
+          return reject(new Error('get configs timeout: 90000'));
+        }
+        if (this._gettingConfigs) return;
+        clearInterval(timer);
+        resolve();
+      }, 10);
+    })
   }
 
   get injector() {
@@ -70,6 +98,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   }
 
   async componentWillCreate() {
+    await this.waitGetConfigs();
     this.dispatch = this.render();
     this._root = await this.dispatch(this.base);
     this.compiler.addCompiler(ServiceCompiler);
@@ -78,9 +107,6 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   async componentDidCreated() {
     await this.compiler.run();
     if (this.configs) {
-      if (typeof this.configs === 'function') {
-        this.configs = await this.configs(this);
-      }
       this.configs = Object.freeze(this.configs);
       await this._root.props(this.configs);
     }
