@@ -82,7 +82,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   }
 
   get env() {
-    return this._env;
+    return this._env || process.env.NODE_ENV;
   }
 
   get plugins() {

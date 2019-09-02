@@ -61,7 +61,7 @@ class Factory extends process_1.Component {
         return this._base;
     }
     get env() {
-        return this._env;
+        return this._env || process.env.NODE_ENV;
     }
     get plugins() {
         return this._plugins;
