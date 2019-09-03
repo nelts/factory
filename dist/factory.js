@@ -15,7 +15,7 @@ class Factory extends process_1.Component {
         this._gettingConfigs = false;
         this.compiler = new compiler_1.default();
         this._base = args.base ? path.resolve(args.base || '.') : (args.cwd || process.cwd());
-        this._env = args.env;
+        this._env = this.processer.env;
         this._inCommingMessage = args;
         this._structor = PluginConstructor;
         if (this._inCommingMessage.config)
@@ -61,7 +61,7 @@ class Factory extends process_1.Component {
         return this._base;
     }
     get env() {
-        return this._env || process.env.NODE_ENV;
+        return this._env;
     }
     get plugins() {
         return this._plugins;

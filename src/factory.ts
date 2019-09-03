@@ -32,7 +32,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   constructor(processer: Processer, args: InCommingMessage, PluginConstructor: { new(t: Factory<P>, n: string, m: string): P }) {
     super(processer, args);
     this._base = args.base ? path.resolve(args.base || '.') : (args.cwd || process.cwd());
-    this._env = args.env;
+    this._env = this.processer.env;
     this._inCommingMessage = args;
     this._structor = PluginConstructor;
     if (this._inCommingMessage.config) this._configs = RequireDefault(this._inCommingMessage.config, this._base);
@@ -82,7 +82,7 @@ export default class Factory<P extends Plugin<Factory<P>>> extends Component imp
   }
 
   get env() {
-    return this._env || process.env.NODE_ENV;
+    return this._env;
   }
 
   get plugins() {
